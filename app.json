@@ -1,0 +1,26 @@
+{
+  "expo": {
+    "name": "DocScan Mobile",
+    "slug": "docscan-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "docscan-mobile",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        { "cameraPermission": "Allow DocScan Mobile to photograph documents." }
+      ],
+      [
+        "expo-image-picker",
+        { "photosPermission": "Choose a document image to scan." }
+      ]
+    ],
+    "experiments": { "typedRoutes": true },
+    "web": { "bundler": "metro", "output": "static" },
+    "android": { "package": "com.jesush.docscanmobile" },
+    "ios": { "bundleIdentifier": "com.jesush.docscanmobile" }
+  }
+}
