@@ -18,4 +18,21 @@ describe("public demo defaults", () => {
       darkMode: false,
     });
   });
+
+  it("prefers the runtime API URL injected by the web container", () => {
+    const browser = window as Window & {
+      __DOCSCAN_CONFIG__?: { apiUrl?: string };
+    };
+    browser.__DOCSCAN_CONFIG__ = { apiUrl: "https://runtime.example.test" };
+    try {
+      expect(createDefaultSettings(undefined, "")).toEqual({
+        apiUrl: "https://runtime.example.test",
+        apiKey: "",
+        demoMode: false,
+        darkMode: false,
+      });
+    } finally {
+      delete browser.__DOCSCAN_CONFIG__;
+    }
+  });
 });

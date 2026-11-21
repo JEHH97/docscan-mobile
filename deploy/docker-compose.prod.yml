@@ -1,0 +1,38 @@
+services:
+  docscan-api:
+    image: ghcr.io/jehh97/docscan-api:${DOCSCAN_API_TAG:-latest}
+    restart: unless-stopped
+    ports:
+      - "7860:7860"
+    environment:
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
+      MAX_UPLOAD_BYTES: ${MAX_UPLOAD_BYTES:-5242880}
+      RATE_LIMIT_PER_MINUTE: ${RATE_LIMIT_PER_MINUTE:-10}
+      RESULT_TTL_SECONDS: ${RESULT_TTL_SECONDS:-3600}
+      API_KEY: ${API_KEY:-}
+      WEBHOOKS_ENABLED: ${WEBHOOKS_ENABLED:-false}
+    healthcheck:
+      test:
+        ["CMD", "curl", "--fail", "--silent", "http://127.0.0.1:7860/healthz"]
+      interval: 30s
+      timeout: 5s
+      start_period: 30s
+      retries: 3
+
+  docscan-mobile-web:
+    image: ghcr.io/jehh97/docscan-mobile-web:${DOCSCAN_MOBILE_WEB_TAG:-latest}
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      API_URL: ${API_URL:-}
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "wget -q -O /dev/null http://127.0.0.1:8080/healthz || exit 1",
+        ]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3

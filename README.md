@@ -72,6 +72,8 @@ See [docs/screenshots](docs/screenshots/) for the app captures. A synthetic imag
 
 Demo: _coming soon_
 
+For GHCR container images and the paired public Docker deployment, see [DEPLOY-DOCKER.md](DEPLOY-DOCKER.md).
+
 ## License
 
 MIT. See [LICENSE](LICENSE).

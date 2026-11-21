@@ -1,5 +1,7 @@
 # Deploy the public web demo to Vercel
 
+For container-based GHCR deployment alongside the API, see [DEPLOY-DOCKER.md](DEPLOY-DOCKER.md).
+
 The public site is a static Expo Router web export. Its default build has no API URL and opens in sample mode; it does not need an API server or a secret.
 
 ## 1. Import the repository

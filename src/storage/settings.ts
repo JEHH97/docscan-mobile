@@ -8,8 +8,20 @@ export type AppSettings = {
   darkMode: boolean;
 };
 
+function configuredApiUrl(): string {
+  if (typeof window !== "undefined") {
+    const runtimeUrl = (
+      window as Window & {
+        __DOCSCAN_CONFIG__?: { apiUrl?: string };
+      }
+    ).__DOCSCAN_CONFIG__?.apiUrl;
+    if (runtimeUrl) return runtimeUrl;
+  }
+  return process.env.EXPO_PUBLIC_API_URL ?? "";
+}
+
 export function createDefaultSettings(
-  apiUrl = process.env.EXPO_PUBLIC_API_URL ?? "",
+  apiUrl = configuredApiUrl(),
   apiKey = process.env.EXPO_PUBLIC_API_KEY ?? "",
 ): AppSettings {
   return { apiUrl, apiKey, demoMode: !apiUrl, darkMode: false };
