@@ -7,12 +7,15 @@ export type AppSettings = {
   demoMode: boolean;
   darkMode: boolean;
 };
-export const defaultSettings: AppSettings = {
-  apiUrl: process.env.EXPO_PUBLIC_API_URL ?? "",
-  apiKey: process.env.EXPO_PUBLIC_API_KEY ?? "",
-  demoMode: !process.env.EXPO_PUBLIC_API_URL,
-  darkMode: false,
-};
+
+export function createDefaultSettings(
+  apiUrl = process.env.EXPO_PUBLIC_API_URL ?? "",
+  apiKey = process.env.EXPO_PUBLIC_API_KEY ?? "",
+): AppSettings {
+  return { apiUrl, apiKey, demoMode: !apiUrl, darkMode: false };
+}
+
+export const defaultSettings = createDefaultSettings();
 
 export async function readSettings(): Promise<AppSettings> {
   try {

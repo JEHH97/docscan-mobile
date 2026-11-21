@@ -29,6 +29,7 @@ The app speaks the public versioned contract: multipart `POST /v1/scans`, status
 
 ## Technical decisions
 
+- Public web builds run in sample mode by default when `EXPO_PUBLIC_API_URL` is unset. Setting an `EXPO_PUBLIC_*` value embeds it in the downloaded client bundle; never put a private API key or other secret in these variables.
 - The mobile client models the service’s asynchronous job lifecycle and polls with bounded exponential backoff; polling stops for completed or failed jobs.
 - The API adapter validates both successful responses and user-facing failures. Network and transient server errors are retried; unsupported, oversized, and invalid submissions are mapped to clear guidance.
 - Sample mode is enabled when no service URL is configured. Its in-memory job advances through queued, processing, and done, then produces fictional OCR output so the whole flow is easy to review.
@@ -69,7 +70,7 @@ See [docs/screenshots](docs/screenshots/) for the app captures. A synthetic imag
 
 ## Demo
 
-Live demo: [Add a public demo URL here](https://example.com/demo)
+Demo: _coming soon_
 
 ## License
 
