@@ -47,7 +47,7 @@ npx expo start
 
 Open the QR code in Expo Go, or press `w` in the Expo terminal to run the web experience. Sample mode is on by default if the API URL is empty; open Settings to use a real service.
 
-For a local API, run the service on your development computer and set its base URL in Settings to the computer’s LAN address and port (for example `http://192.168.1.20:8000`). A phone cannot reach the host through its own `localhost`. Add an API key only when your service requires it. `.env.example` contains fake values and no credentials.
+For a local API, run the service on your development computer and set its base URL in Settings to the computer’s LAN address and port. A phone cannot reach the host through its own `localhost`. Add an API key only when your service requires it. `.env.example` contains fake values and no credentials.
 
 ## Tests and checks
 
