@@ -17,4 +17,4 @@ case "${API_URL:-}" in
 esac
 
 printf 'window.__DOCSCAN_CONFIG__={"apiUrl":"%s"};\n' "${API_URL:-}" \
-    > /usr/share/nginx/html/config.js
+    > /tmp/config.js

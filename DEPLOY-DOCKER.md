@@ -2,10 +2,10 @@
 
 The two-image public demo is distributed through GitHub Container Registry:
 
-- `ghcr.io/jehh97/docscan-api:latest` (plus `vX.Y.Z` and `sha-<short>` tags) runs the API, RQ worker, and private Redis together from the API repository's `Dockerfile.spaces`.
-- `ghcr.io/jehh97/docscan-mobile-web:latest` (plus `vX.Y.Z` and `sha-<short>` tags) serves this repository's static Expo export through unprivileged nginx.
+- `ghcr.io/jehh97/docscan-api:v1.0.1` (plus `sha-<short>` tags) runs the API, RQ worker, and private Redis together from the API repository's `Dockerfile.spaces`.
+- `ghcr.io/jehh97/docscan-mobile-web:v1.0.1` (plus `sha-<short>` tags) serves this repository's static Expo export through unprivileged nginx.
 
-Version tags are created for `v*.*.*` releases, `latest` is created for release tags and manual publication from `main`, and both are built for `linux/amd64`.
+Version tags are created for `v*.*.*` releases; both are built for `linux/amd64`. Workflows build a local image, scan vulnerabilities and secrets with Trivy before publishing, block on CRITICAL findings with available fixes, and report HIGH findings. No floating `latest` tag is created.
 
 ## Run both images
 
@@ -17,13 +17,13 @@ docker compose --env-file .env -f deploy/docker-compose.prod.yml pull
 docker compose --env-file .env -f deploy/docker-compose.prod.yml up -d
 ```
 
-Compose publishes API port `7860` and web port `8080` for a reverse proxy. Terminate TLS at the proxy, route the web hostname to port `8080`, and route the API hostname to port `7860`. The API's Redis is private to its container and is not published. Set `API_URL` to the HTTPS API origin, and set the API's `CORS_ORIGINS` to the exact HTTPS web origin, with no trailing slash. Leave `WEBHOOKS_ENABLED=false` for the public demo.
+Compose binds API `127.0.0.1:7860` and web `127.0.0.1:8080` by default (override `*_BIND_ADDRESS` and `*_HOST_PORT` only when needed). Terminate TLS at a reverse proxy on the same host, route the web hostname to port `8080`, and route the API hostname to port `7860`. The API's Redis is private to its container and is not published. Set `API_URL` to the HTTPS API origin, and set the API's `CORS_ORIGINS` to the exact HTTPS web origin, with no trailing slash. Leave `WEBHOOKS_ENABLED=false` for the public demo.
 
-The API has demo limits (`MAX_UPLOAD_BYTES=5242880`, `RATE_LIMIT_PER_MINUTE=10`, `RESULT_TTL_SECONDS=3600`), temporary storage, and no required API key. `API_KEY` may be set for a protected API, but a key must never be embedded in the public web app. By default, the API is publicly accessible without `API_KEY`; **do not upload sensitive documents**. Temporary scan data may be removed on restart or expiry.
+Both containers run with `no-new-privileges`, all Linux capabilities dropped, a read-only root filesystem, bounded memory/PIDs, and a small `/tmp` tmpfs. The API has demo limits (`MAX_UPLOAD_BYTES=5242880`, `RATE_LIMIT_PER_MINUTE=10`, `RESULT_TTL_SECONDS=3600`), temporary storage, and no required API key. `API_KEY` may be set for a protected API, but a key must never be embedded in the public web app. By default, the API is publicly accessible without `API_KEY`; **do not upload sensitive documents**. Temporary scan data may be removed on restart or expiry.
 
 ### Runtime API configuration
 
-The web image starts in sample mode when `API_URL` is empty. Set `API_URL` in the Compose environment to configure the API at container startup; the entrypoint writes a public `config.js` consumed by the app before it starts. This is preferred to rebuilding the image. As an alternative, build with `--build-arg EXPO_PUBLIC_API_URL=https://api.example.com`; this value is compiled into the downloaded bundle and is public. Do not pass secrets using `API_URL` or `EXPO_PUBLIC_*`.
+The web image starts in sample mode when `API_URL` is empty. Set `API_URL` in the Compose environment to configure the API at container startup; the entrypoint writes a public `/tmp/config.js` consumed by the app before it starts, compatible with the read-only root filesystem. This is preferred to rebuilding the image. As an alternative, build with `--build-arg EXPO_PUBLIC_API_URL=https://api.example.com`; this value is compiled into the downloaded bundle and is public. Do not pass secrets using `API_URL` or `EXPO_PUBLIC_*`.
 
 ## GHCR authentication
 

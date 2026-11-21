@@ -11,7 +11,9 @@ ARG EXPO_PUBLIC_API_URL=
 RUN EXPO_PUBLIC_API_URL="$EXPO_PUBLIC_API_URL" npm run export:web \
     && node scripts/inject-runtime-config.mjs
 
-FROM nginxinc/nginx-unprivileged:1.27.4-alpine3.21
+FROM nginxinc/nginx-unprivileged:1.28.0-alpine3.21
+USER root
+RUN apk upgrade --no-cache
 LABEL org.opencontainers.image.source="https://github.com/JEHH97/docscan-mobile" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.title="DocScan Mobile web demo" \
@@ -24,6 +26,5 @@ ENV API_URL=""
 EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD wget -q -O /dev/null http://127.0.0.1:8080/healthz || exit 1
-USER root
 RUN chown -R 101:101 /usr/share/nginx/html
 USER 101:101
